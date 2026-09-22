@@ -1,4 +1,4 @@
-import Exercise from "./exercises/02-state-props";
+import Exercise from "./exercises/03-object-state";
 
 export default function App() {
   return (

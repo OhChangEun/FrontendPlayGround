@@ -1,4 +1,4 @@
-import Exercise from "./exercises/03-object-state";
+import Exercise from "./exercises/04-nested-object";
 
 export default function App() {
   return (

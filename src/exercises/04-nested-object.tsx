@@ -23,21 +23,19 @@ const initialUser: User = {
 function NestedObject() {
   const [user, setUser] = useState(initialUser);
 
-  function handleMoveToBusan() {
+  function updateAddress(part: Partial<Address>) {
     setUser((prev) => ({
       ...prev,
-      address: { ...prev.address, city: "부산" },
+      address: { ...prev.address, ...part },
     }));
   }
 
+  function handleMoveToBusan() {
+    updateAddress({ city: "부산" });
+  }
+
   function handleChangeZipcode() {
-    setUser((prev) => ({
-      ...prev,
-      address: {
-        ...prev.address,
-        zipcode: "54321",
-      },
-    }));
+    updateAddress({ zipcode: "54321" });
   }
 
   function initialize() {

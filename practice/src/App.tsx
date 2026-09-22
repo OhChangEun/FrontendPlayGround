@@ -1,5 +1,9 @@
-import Exercise from "./exercises/01-list-click";
+import Exercise from "./exercises/02-state-props";
 
 export default function App() {
-  return <Exercise />;
+  return (
+    <div className="flex justify-center">
+      <Exercise />
+    </div>
+  );
 }

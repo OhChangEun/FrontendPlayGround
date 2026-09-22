@@ -1,4 +1,4 @@
-import Exercise from "./exercises/04-nested-object";
+import Exercise from "./exercises/06-nested-in-array";
 
 export default function App() {
   return (

@@ -80,5 +80,15 @@ const initialItems: readonly Item[] = [
 - gift 항목 개수 표시: `items.filter((it) => it.gift).length`
 - price를 `toLocaleString()`으로 1,200,000 형식 출력
 
-## 배운 것 / 헷갈렸던 것
-(실습 끝나고 채우기)
+## 배운 것
+- 조건부 일괄 수정은 `prev.map((it) => 조건 ? { ...it, 바뀐필드 } : it)` 한 틀. 03~06의 `it.id === id` 자리에 조건만 바뀜.
+- 없던 필드(`gift?`)도 `{ ...it, gift: true }`로 추가 가능. optional 타입이라 통과.
+- map 콜백에 반환 타입 `(item): Item =>` 붙이면 `gitf` 같은 오타 필드를 tsc가 잡음. 안 붙이면 조용히 통과.
+- 매개변수 타입 `(item: Item)`과 반환 타입 `(item): Item`은 자리가 다름. 괄호 안은 들어오는 것, 괄호 뒤는 나가는 것.
+- `Todo["id"]` indexed access type으로 핸들러 인자 타입을 원본에서 파생 가능. `Post["author"]["name"]`은 중첩 경로.
+
+## 헷갈렸던 것
+- `prev.map((item) => item.price * 0.9)` — 숫자 배열이 나옴. map은 "각 항목을 뭘로 바꿀까"라 결과도 Item이어야 함.
+- 오타 방어하려고 `(item: Item)`을 붙였는데 안 잡힘. 반환 타입 자리에 붙여야 함.
+- `handleOfferForFree`는 "무료로 준다"로 읽혀 가격 0으로 만드는 함수처럼 보임. 하는 일(태그 붙이기)이 이름에 보이게 `handleMarkGift`.
+- `<li>` key 세 번 빠뜨림. tsc/lint가 안 잡아서 콘솔 경고로만 보임.

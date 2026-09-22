@@ -1,4 +1,4 @@
-import Exercise from "./exercises/06-nested-in-array";
+import Exercise from "./exercises/07-bulk-update";
 
 export default function App() {
   return (

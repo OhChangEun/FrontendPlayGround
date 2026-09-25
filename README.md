@@ -17,6 +17,7 @@
 | 06 | 배열 안 중첩 객체, 컴포넌트 분리 | [md](docs/exercises/06-nested-in-array.md) | [tsx](src/exercises/06-nested-in-array.tsx) |
 | 07 | 배열 일괄 수정 (조건부 map) | [md](docs/exercises/07-bulk-update.md) | [tsx](src/exercises/07-bulk-update.tsx) |
 | 08 | 제어 컴포넌트 (단일 input, form submit) | [md](docs/exercises/08-controlled-input.md) | [tsx](src/exercises/08-controlled-input.tsx) |
+| 09 | 회원가입 form (객체 state, name 속성, computed key) | [md](docs/exercises/09-object-form.md) | [tsx](src/exercises/09-object-form.tsx) |
 
 ## 실행
 ```bash

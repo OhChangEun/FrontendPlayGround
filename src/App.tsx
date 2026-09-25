@@ -1,4 +1,4 @@
-import Exercise from "./exercises/08-controlled-input";
+import Exercise from "./exercises/09-object-form";
 
 export default function App() {
   return (

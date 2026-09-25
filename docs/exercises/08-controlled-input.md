@@ -45,5 +45,19 @@
 - 실시간 검증: 2자 미만이면 입력창 아래 빨간 글씨로 "2자 이상 입력하세요"
 - 제출 후 input 비우기
 
-## 배운 것 / 헷갈렸던 것
-(실습 끝나고 채우기)
+## 배운 것
+- `React.FormEvent`는 @types/react 19.2.10부터 deprecated. DOM에 form 이벤트가 따로 없어서. 제출은 `React.SubmitEvent<HTMLFormElement>`, 입력은 `React.ChangeEvent<HTMLInputElement>`.
+- 이벤트 타입 꺾쇠 안은 "핸들러를 단 요소". form이면 HTMLFormElement, input이면 HTMLInputElement.
+- 핸들러가 이벤트 하나만 받으면 `onSubmit={handleSubmit}`으로 바로. 내가 정한 값을 넘길 때만 `() => fn(id)`로 감쌈.
+- 입력 단계(onChange)는 다 받고 다듬기(`slice`, `replace`). 제출 단계(onSubmit, disabled)에서 거르기. 입력에서 막으면 화면이 멈춤.
+- `if (len <= 10)`은 붙여넣기 시 통째로 무시. `slice(0, 10)`은 앞 10자만 받음. 실무는 `maxLength` + `slice` 둘 다.
+- `disabled`는 동작(클릭·Enter 차단)이지 모양이 아님. 보이게 하려면 `disabled:opacity-50` 같은 CSS 따로.
+
+## 헷갈렸던 것
+- `handleInputName(e: HTMLInputElement)` — e는 요소가 아니라 이벤트. `ChangeEvent<HTMLInputElement>`.
+- `React.FormEvent<HTMLInputElement>` — form 이벤트인데 input 요소로 적음. 그리고 FormEvent 자체가 deprecated.
+- `type="submit"` 버튼에 onClick까지 달아서 두 번 실행 (05 재발).
+- onChange에서 `if (value === "") return` — 마지막 글자가 안 지워짐.
+- `name.length < 2`만 쓰면 0자일 때도 경고. `length > 0 &&` 필요.
+- JSX 텍스트에 따옴표를 쓰면 따옴표가 그대로 화면에 찍힘.
+- `slice(10)`은 10번째부터 끝까지. 앞 10자는 `slice(0, 10)`.

@@ -27,5 +27,6 @@
   }
   button {
     @apply border border-gray-300 rounded px-3 py-1 my-1 cursor-pointer hover:bg-gray-100;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent;
   }
 }

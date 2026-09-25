@@ -73,5 +73,28 @@ const initialForm: UserForm = { name: "", email: "", age: "" };
 - 제출 시 age를 `Number()`로 바꾼 객체를 alert. `{ ...user, age: Number(user.age) }`
 - 필드가 5개, 10개로 늘면 `handleChange`는 그대로인 것 확인. 이게 이 패턴을 쓰는 이유.
 
-## 배운 것 / 헷갈렸던 것
-(실습 끝나고 채우기)
+## 배운 것
+- input 여러 개를 객체 state 하나로. `name` 속성 + `e.target.name`으로 어느 칸인지 식별. `{ ...prev, [name]: value }` computed property.
+- `handleChange` 하나로 세 input. 필드별 다듬기는 삼항 한 줄 (`name === "age" ? replace : value`). 늘어나면 sanitizers 객체로 분리.
+- 폼 state(`UserForm`, 값 전부 string)와 제출 데이터(`User`, age는 number)를 타입으로 나눔. 제출 시 `payload = { ...user, age: Number(user.age) }`. state를 number로 바꾸려 하면 타입이 막음 + alert엔 스냅샷이 찍힘.
+- `handleXxx`는 이벤트에서만, 동사 함수(`resetForm`)는 어디서든. handle이 동사 함수를 부르는 건 정상.
+- `id`/`htmlFor`는 DOM 전체(현재 렌더링된 것)에서 유일. `signup-email`처럼 접두사. `name`은 폼 안에서만 유일하면 됨.
+- React의 `type` 속성 타입은 `HTMLInputTypeAttribute = "text" | "email" | ... | (string & {})`. 마지막 때문에 오타도 통과. `Exclude`로 못 뗌(전부 never). 좁히려면 직접 나열.
+
+### 제네릭 Field (심화)
+- `name: keyof UserForm` → 오타 컴파일 에러. 하지만 UserForm 전용.
+- `Field<T>`로 일반화. `FieldProps<T>`의 T와 `function Field<T>`의 T는 별개 변수라 둘 다 선언.
+- `keyof T`는 `string | number | symbol`. `Extract<keyof T, string>`으로 string만 (`keyof T & string`과 동일).
+- `value: string` 대신 `values: T` + `value={values[name]}`. name과 value 불일치 자체가 불가능. `values={user}`로 T 추론되니 꺾쇠 불필요.
+- `values[name]`이 string이려면 T 제약 필요. `T extends Record<string, string>`은 `interface`를 거부(인덱스 시그니처 없음). lint가 interface 강제라 `type StringValues<T> = { [K in keyof T]: string }` + `T extends StringValues<T>`로. "T를 string 값 버전으로 만들었을 때 원본과 같은가" 검사.
+- `form`이라는 prop 이름은 `<input>`의 HTML 속성과 충돌. `values`로.
+- 현업: TextInput(모양) + FormField(연결) 두 층. FormField 역할은 react-hook-form `register("email")`이 대신. 직접 만드는 건 공용 컴포넌트 팀 수준. 읽을 수 있으면 충분.
+
+## 헷갈렸던 것
+- `const [name, value] = e.target` — 객체 구조 분해는 `{}`. 배열은 `[]`.
+- `value = value.replace("/\D/g", "")` — const 재대입 + 정규식을 따옴표로 감쌈.
+- `type="signup-email" id="email"` — 두 속성 값이 서로 바뀜. tsc 못 잡음.
+- `values: {user}` — JSX 속성은 `=`. 콜론은 객체 리터럴.
+- `setUser((prev) => ({ ...prev, age: Number(prev.age) }))` 로 제출 직전 state를 number로 — 타입 에러 + alert엔 반영 안 됨. payload 따로.
+- `(item: Item)` 매개변수에 타입 붙여도 오타 안 잡힘 (07 재발). 반환 타입 자리.
+- Field로 바꾸면서 `id`, `type`을 input에 안 넘김. `inputMode`도 빠짐.

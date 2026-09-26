@@ -1,4 +1,4 @@
-import Exercise from "./exercises/09-object-form";
+import Exercise from "./exercises/10-preference-form";
 
 export default function App() {
   return (

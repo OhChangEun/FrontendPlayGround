@@ -107,7 +107,27 @@ const CHANNELS: Channel[] = ["email", "sms", "push"];
 - radio 3개를 `RadioGroup` 컴포넌트로 분리. props: `name`, `options`, `value`, `onChange`.
 
 ## 배운 것
-(실습 후 채우기)
+- select는 `value` + `e.target.value`, checkbox는 `checked` + `e.target.checked`, radio는 같은 `name` + 각자 `value` + `checked={state === value}`. radio에서 `checked`를 빼면 비제어라 [초기화]가 안 먹음.
+- `e.target.value`는 항상 `string`. `as Fruit` 대신 type guard `isFruit(v: string): v is Fruit`로 좁힘. runtime에 실제로 목록에 있는지 확인하니 DevTools로 value를 바꿔도 안 들어감.
+- type guard 안은 `some`(boolean). `includes`는 `Fruit[]`에 `string`을 못 넣어서 결국 `as`가 필요. `find`는 값을 꺼내 쓸 때(`Fruit | undefined`). JS `some`/`every` = 다른 언어 `any`/`all`, 첫 true에서 멈춤.
+- narrowing은 `const`라서 `setPreference((prev) => ...)` callback 안까지 유지. `let`이면 callback 안에서 다시 `string`.
+- state·props 안 쓰는 함수(`isFruit`, `isChannel`)는 component 밖에. render마다 새로 안 만듦.
+- 조건부 렌더링은 `&&`. `??`는 null일 때 뒤쪽을 쓰는 거라 정반대.
+- JSX 안에서는 template literal 대신 `{}`로 끼움. 글자와 `{}` 사이 줄바꿈 공백은 지워지니 `{" "}`로 살림(`{""}`는 빈 문자열이라 효과 없음). Prettier가 80자 넘으면 알아서 `{" "}` 넣고 줄 나눔.
+- `<input>`은 void element라 글자를 못 가짐. `value`는 화면에 안 보임. radio 옆 글자는 label로 따로.
+- label은 input 하나, `fieldset` + `legend`는 입력 묶음 하나에 이름을 붙임. screen reader가 그룹 이름까지 읽음. `<fieldset disabled>`로 한 번에 잠금 가능.
+- label을 밖에 빼는 구조(`htmlFor` + `id`)는 `input:checked + label`, Tailwind `peer-checked:` 같은 형제 selector를 쓸 수 있음. 대신 id를 유일하게 관리해야 함.
+- `useId()`: instance마다 다르고 re-render해도 유지. SSR hydration에서도 값이 같음. 맨 위에서 한 번 부르고 `${id}-fruit`처럼 suffix. `map` 안에서 hook 호출 불가라 wrapper hook을 만들면 `(name) => string` 함수를 돌려주는 모양. component를 입력 하나 단위로 쪼개면 suffix도 필요 없음. `key`나 CSS selector용으로는 안 씀.
+- 이름 길이는 범위에 비례. 한 줄 callback은 `c`도 OK, 여러 줄이면 풀어 씀. 바깥 변수와 이름이 겹치면(shadowing) 다른 이름으로.
 
 ## 헷갈렸던 것
-(실습 후 채우기)
+- `setPreference((prev) => ({ ...prev, fruit: e.target.value }))` — `string`이라 `Fruit`에 안 들어감.
+- 초기화 버튼에 `onChange={resetForm}` — button은 change event가 없음. `onClick`.
+- `map`으로 만든 `<option>`에 `key` 빠짐 (radio에서도 한 번 더).
+- 요약을 `submitted?.newsletter ? ... : ""`로 — false면 아무것도 안 나옴. 그리고 `true`가 그대로 찍힘.
+- `` {submitted ?? `...${submitted.fruit}`} `` — null이면 null.fruit, 있으면 객체를 렌더링하려 해서 둘 다 에러.
+- `<p>` 안에 backtick을 그대로 둬서 `` ` ``와 `$`가 화면에 찍힘. formatter가 `${`를 `$` + 줄바꿈 + `{`로 쪼갬.
+- radio 3개에 `id="channel"`을 똑같이 줌 — id 중복, label은 첫 번째만 연결. 그룹 이름은 `legend` 몫.
+- radio 옆에 글자가 안 나와서 `value`가 보일 줄 알았음.
+- `isChannel`의 callback 인자를 `f`로 복사해 옴. 동작은 같지만 fruit로 읽힘.
+- `==` 비교, `handelCheck` 오타.

@@ -117,18 +117,17 @@ const CHANNELS: Channel[] = ["email", "sms", "push"];
 - `<input>`은 void element라 글자를 못 가짐. `value`는 화면에 안 보임. radio 옆 글자는 label로 따로.
 - label은 input 하나, `fieldset` + `legend`는 입력 묶음 하나에 이름을 붙임. screen reader가 그룹 이름까지 읽음. `<fieldset disabled>`로 한 번에 잠금 가능.
 - label을 밖에 빼는 구조(`htmlFor` + `id`)는 `input:checked + label`, Tailwind `peer-checked:` 같은 형제 selector를 쓸 수 있음. 대신 id를 유일하게 관리해야 함.
-- `useId()`: instance마다 다르고 re-render해도 유지. SSR hydration에서도 값이 같음. 맨 위에서 한 번 부르고 `${id}-fruit`처럼 suffix. `map` 안에서 hook 호출 불가라 wrapper hook을 만들면 `(name) => string` 함수를 돌려주는 모양. component를 입력 하나 단위로 쪼개면 suffix도 필요 없음. `key`나 CSS selector용으로는 안 씀.
+- `useId()`: instance마다 다르고 re-render해도 유지. SSR hydration에서도 값이 같음. 맨 위에서 한 번 부르고 `${id}-fruit`처럼 suffix. component를 입력 하나 단위로 쪼개면 suffix도 필요 없음. `key`나 CSS selector용으로는 안 씀.
 - 이름 길이는 범위에 비례. 한 줄 callback은 `c`도 OK, 여러 줄이면 풀어 씀. 바깥 변수와 이름이 겹치면(shadowing) 다른 이름으로.
 
 ### Radio 분리, updatePreference (더 해보기)
 - handler 하나로 합치기는 안 함. 09는 text input 3개가 하는 일이 같았지만, 10은 값 꺼내는 법(`value`/`checked`)과 검사(`isFruit`)가 달라서 합치면 안에서 다시 분기. `[name]: next`는 key가 `string`이라 타입 검사도 잃음.
-- 공통 부분만 `updatePreference<K extends keyof Preference>(key: K, value: Preference[K])`로. `[key]`는 computed property name(변수 값을 key로), value 자리는 원래 식이라 안 감쌈. 여러 component에서 반복되면 `useObjectState` 같은 hook으로.
-- `submitted`는 제출 순간의 스냅샷. `preference`로 그리면 제출 안 한 값이 요약에 나옴. `null`로 제출 여부도 겸함. 스냅샷이 안 깨지는 건 `{ ...prev }`로 항상 새 객체를 만들기 때문.
+- 공통 부분만 `updatePreference<K extends keyof Preference>(key: K, value: Preference[K])`로. `[key]`는 computed property name(변수 값을 key로), value 자리는 원래 식이라 안 감쌈.
+- `submitted`는 제출 순간의 스냅샷. `preference`로 그리면 제출 안 한 값이 요약에 나옴. `null`로 제출 여부도 겸함.
 - radio는 closure로 값 전달 가능. `map`마다 만든 `() => updatePreference("channel", channel)`이 자기 `channel`을 기억 → `e.target.value`, `isChannel` 불필요. select·text input은 handler가 하나거나 값을 미리 몰라서 여전히 이벤트에서 읽음.
 - radio의 `value`는 체크 때 생기는 값이 아니라 고정 이름표. `e.target.value`와 FormData 제출용. 바뀌는 건 `checked`.
-- `Channel` → `string`은 넓히기라 그냥 됨. `string` → `Channel`만 좁히기 필요. `Radio`가 `onChange: () => void`라 값을 돌려주지 않으니 좁힐 일이 없음. 돌려주려면 제네릭 `onChange: (value: T) => void`.
-- 공통 component props: 그대로 꽂는 값은 넓게(`string`), 돌려주는 값은 제네릭, 분기에 쓰는 값(`variant`)은 union으로 좁게.
-- 쪼개는 기준: 자기 로직·state가 있나(`useId`), 바뀌는 이유가 다른가(스타일 vs 배치), 재사용하나. `legend`처럼 태그 하나에 로직 없으면 안 쪼갬. 지금은 `Radio`만 만들고 부모에서 조합, 반복되면 `RadioGroup`.
+- `Channel` → `string`은 넓히기라 그냥 됨. `string` → `Channel`만 좁히기 필요. `Radio`가 `onChange: () => void`라 값을 돌려주지 않으니 좁힐 일이 없음.
+- 쪼개는 기준: 자기 로직·state가 있나(`useId`), 바뀌는 이유가 다른가(스타일 vs 배치), 재사용하나. `legend`처럼 태그 하나에 로직 없으면 안 쪼갬. `Radio`만 만들고 부모에서 조합.
 
 ## 헷갈렸던 것
 - `setPreference((prev) => ({ ...prev, fruit: e.target.value }))` — `string`이라 `Fruit`에 안 들어감.

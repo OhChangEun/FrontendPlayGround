@@ -146,16 +146,19 @@ interface RadioProps {
 }
 
 function Radio({ name, value, onChange, checked }: RadioProps) {
+  const id = useId();
+
   return (
     <div>
       <input
+        id={id}
         type="radio"
         name={name}
         value={value}
         onChange={onChange}
         checked={checked}
       />
-      <label>{value}</label>
+      <label htmlFor={id}>{value}</label>
     </div>
   );
 }

@@ -22,9 +22,10 @@ function isFruit(v: string): v is Fruit {
   return FRUITS.some((f) => f === v);
 }
 
-function isChannel(v: string): v is Channel {
-  return CHANNELS.some((c) => c === v);
-}
+// Radio에 closure로 값을 넘기면서 e.target.value를 안 읽게 됨 → 좁히기 불필요
+// function isChannel(v: string): v is Channel {
+//   return CHANNELS.some((c) => c === v);
+// }
 
 function PreferenceForm() {
   const [preference, setPreference] = useState<Preference>(initialPreference);
@@ -42,26 +43,31 @@ function PreferenceForm() {
     setSubmitted(null);
   }
 
+  function updatePreference<K extends keyof Preference>(
+    key: K,
+    value: Preference[K],
+  ) {
+    setPreference((prev) => ({ ...prev, [key]: value }));
+  }
+
   function handleFruitChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const inputValue = e.target.value;
 
     // const fruit = FRUITS.find((f) => f === inputValue);
     // if (!fruit) return;
-    if (isFruit(inputValue)) {
-      setPreference((prev) => ({ ...prev, fruit: inputValue }));
-    }
+    if (isFruit(inputValue)) updatePreference("fruit", inputValue);
   }
 
   function handleNewsletterChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setPreference((prev) => ({ ...prev, newsletter: e.target.checked }));
+    updatePreference("newsletter", e.target.checked);
   }
 
-  function handleChannelChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const inputRadioValue = e.target.value;
-
-    if (isChannel(inputRadioValue))
-      setPreference((prev) => ({ ...prev, channel: inputRadioValue }));
-  }
+  // function handleChannelChange(e: React.ChangeEvent<HTMLInputElement>) {
+  //   const inputRadioValue = e.target.value;
+  //
+  //   if (isChannel(inputRadioValue))
+  //     updatePreference("channel", inputRadioValue);
+  // }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col">
@@ -93,6 +99,15 @@ function PreferenceForm() {
       <fieldset>
         <legend>알림채널</legend>
         {CHANNELS.map((channel) => (
+          <Radio
+            key={channel}
+            name="channel"
+            value={channel}
+            checked={preference.channel === channel}
+            onChange={() => updatePreference("channel", channel)}
+          />
+        ))}
+        {/* {CHANNELS.map((channel) => (
           <div key={channel}>
             <input
               id={`${id}-${channel}`}
@@ -104,7 +119,7 @@ function PreferenceForm() {
             />
             <label htmlFor={`${id}-${channel}`}>{channel}</label>
           </div>
-        ))}
+        ))} */}
       </fieldset>
 
       <button type="submit">제출</button>
@@ -114,12 +129,34 @@ function PreferenceForm() {
 
       {submitted && (
         <p>
-          과일은 {submitted.fruit}, 뉴스레터는
-          {submitted.newsletter ? "구독" : "구독 안함"}, 알림은
+          과일은 {submitted.fruit}, 뉴스레터는{" "}
+          {submitted.newsletter ? "구독" : "구독 안함"}, 알림은{" "}
           {submitted.channel}로 받습니다.
         </p>
       )}
     </form>
+  );
+}
+
+interface RadioProps {
+  name: string;
+  value: string;
+  onChange: () => void;
+  checked: boolean;
+}
+
+function Radio({ name, value, onChange, checked }: RadioProps) {
+  return (
+    <div>
+      <input
+        type="radio"
+        name={name}
+        value={value}
+        onChange={onChange}
+        checked={checked}
+      />
+      <label>{value}</label>
+    </div>
   );
 }
 

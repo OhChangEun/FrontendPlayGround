@@ -19,6 +19,7 @@
 | 08 | 제어 컴포넌트 (단일 input, form submit) | [md](docs/exercises/08-controlled-input.md) | [tsx](src/exercises/08-controlled-input.tsx) |
 | 09 | 회원가입 form (객체 state, name 속성, computed key) | [md](docs/exercises/09-object-form.md) | [tsx](src/exercises/09-object-form.tsx) |
 | 10 | select · checkbox · radio 제어 컴포넌트 (boolean, union 타입) | [md](docs/exercises/10-preference-form.md) | [tsx](src/exercises/10-preference-form.tsx) |
+| 11 | 회원가입 form 검증 (제출 시 검사, error state 조건부 렌더링) | [md](docs/exercises/11-signup-validation.md) | [tsx](src/exercises/11-signup-validation.tsx) |
 
 ## 실행
 ```bash

@@ -1,4 +1,4 @@
-import Exercise from "./exercises/10-preference-form";
+import Exercise from "./exercises/11-signup-validation";
 
 export default function App() {
   return (
